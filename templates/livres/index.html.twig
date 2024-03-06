@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des livres
+{% endblock %}
+
+{% block body %}
+	<h1>Liste des livres</h1>
+	<table class="table">
+		<tr>
+			<th>Titre</th>
+			<th>ISBN</th>
+			<th>Editeur</th>
+			<th>Date Edition</th>
+			<th>Prix</th>
+			<th colspan="3">Action</th>
+		</tr>
+
+		{% for livre in livres %}
+			<tr>
+				<td>{{livre.titre|capitalize}}</td>
+				<td>{{livre.ISBN}}</td>
+				<td>{{livre.editeur}}</td>
+				<td>{{livre.editedAt|date('d-m-Y')}}</td>
+				<td>{{livre.prix}}</td>
+				<td>
+					<a href="#" class="btn btn-success btn-sm">Voir plus...</a>
+				</td>
+				<td>
+					<a href="#" class="btn btn-danger btn-sm">Supprimer</a>
+				</td>
+				<td>
+					<a href="#" class="btn btn-primary btn-sm">Edit</a>
+				</td>
+			</tr>
+		{% endfor %}
+	</table>
+
+{% endblock %}
