@@ -6,11 +6,13 @@
 {% block body %}
 	<h1>Liste des livres</h1>.
 	<div class="d-flex justify-content-end">
-		<a href="#" class="btn btn-success">Ajouter un nouveau livre</a>
+		<a href="{{url('admin_livres_create')}}" class="btn btn-success">Ajouter un nouveau livre</a>
+
 	</div>
 	<table class="table">
 		<tr>
 			<th>Titre</th>
+			<th>categorie</th>
 			<th>ISBN</th>
 			<th>Editeur</th>
 			<th>Date Edition</th>
@@ -21,6 +23,7 @@
 		{% for livre in livres %}
 			<tr>
 				<td>{{livre.titre|capitalize}}</td>
+				<td>{{livre.categorie.libelle}}</td>
 				<td>{{livre.ISBN}}</td>
 				<td>{{livre.editeur}}</td>
 				<td>{{livre.editedAt|date('d-m-Y')}}</td>

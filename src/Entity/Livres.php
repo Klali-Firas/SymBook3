@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Livres
 {
     #[ORM\Id]
-    
+
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
@@ -38,6 +38,9 @@ class Livres
 
     #[ORM\Column]
     private ?float $prix = null;
+
+    #[ORM\ManyToOne(inversedBy: 'livres')]
+    private ?Categories $categorie;
 
     public function getId(): ?int
     {
@@ -136,6 +139,18 @@ class Livres
     public function setPrix(float $prix): static
     {
         $this->prix = $prix;
+
+        return $this;
+    }
+
+    public function getCategorie(): ?Categories
+    {
+        return $this->categorie;
+    }
+
+    public function setCategorie(?Categories $categorie): static
+    {
+        $this->categorie = $categorie;
 
         return $this;
     }

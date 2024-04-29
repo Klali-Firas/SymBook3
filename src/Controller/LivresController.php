@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Livres;
+use App\Form\LivreType;
 use App\Repository\LivresRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -16,7 +18,7 @@ class LivresController extends AbstractController
     {
         $livres = $rep->findAll();
         //$livres = $rep->findGreaterThan(100);
-        //dd($livres);
+        // dd($livres);
         return $this->render('livres/index.html.twig', [
             'livres' => $livres,
         ]);
@@ -29,24 +31,27 @@ class LivresController extends AbstractController
         ]);
     }
     #[Route('/admin/livres/create', name: 'admin_livres_create')]
-    public function create(EntityManagerInterface $em): Response
+    public function create(EntityManagerInterface $em, Request $request): Response
     {
         $livre = new Livres();
-        $livre->setImage('https://picsum.photos/300')
-            ->setTitre('Titre du livre 10')
-            ->setEditeur('Editeur 1')
-            ->setISBN('111.1111.1111.1235')
-            ->setPrix(200)
-            ->setEditedAt(new \DateTimeImmutable('01-01-2024'))
-            ->setSlug('titre-du-livre-10')
-            ->setResume('hfjhgdkfhfklgfdlkjgjgfmjgfgfjgjgbkjbfl,gj');
-        $em->persist($livre);
-        $em->flush();
-        //dd($livre);
-        //return $this->render('livres/create.html.twig', [
-        //   'livre' => $livre,
-        // ]);
-        return $this->redirectToRoute('admin_livres');
+        //Construction de l'objet formulaire
+        $form = $this->createForm(LivreType::class, $livre);
+        //traitement de la requête
+        $form->handleRequest($request);
+        //vérification de la soumission du formulaire
+        if ($form->isSubmitted() && $form->isValid()) {
+            //enregistrement de la catégorie
+            $em->persist($livre);
+            $em->flush();
+            // $this->addFlash('success', 'Catégorie ajoutée avec succès');
+            //redirection vers la liste des catégories
+            return $this->redirectToRoute('admin_livres');
+        }
+
+        return $this->render('livres/create.html.twig', [
+            'f' => $form,
+
+        ]);
     }
     #[Route('/admin/livres/delete/{id}', name: 'admin_livres_delete')]
     public function delete(EntityManagerInterface $em, Livres $livre): Response
