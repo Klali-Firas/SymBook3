@@ -10,11 +10,17 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 // #[IsGranted('ROLE_ADMIN')]
 
 class LivresController extends AbstractController
 {
+
+    public function __construct(private UrlGeneratorInterface $urlGenerator)
+    {
+    }
     #[Route('/admin/livres', name: 'admin_livres')]
     public function index(LivresRepository $rep): Response
     {
@@ -56,7 +62,7 @@ class LivresController extends AbstractController
         ]);
     }
     #[Route('/admin/livres/delete/{id}', name: 'admin_livres_delete')]
-    public function delete(EntityManagerInterface $em, Livres $livre): Response
+    public function delete(EntityManagerInterface $em, Livres $livre)
     {    //recherche du livre à supprimer
 
         //suppression du livre trouvé
@@ -64,8 +70,30 @@ class LivresController extends AbstractController
         $em->flush();
         //dd($livre);
 
-        return $this->render('livres/create.html.twig', [
-            'livre' => $livre,
+        return new RedirectResponse($this->urlGenerator->generate('admin_livres'));
+    }
+
+    #[Route('/admin/livres/edit/{id}', name: 'admin_livres_edit')]
+
+    public function edit(EntityManagerInterface $em, Request $request, Livres $livre): Response
+    {
+        //Construction de l'objet formulaire
+        $form = $this->createForm(LivreType::class, $livre);
+        //traitement de la requête
+        $form->handleRequest($request);
+        //vérification de la soumission du formulaire
+        if ($form->isSubmitted() && $form->isValid()) {
+            //enregistrement de la catégorie
+            $em->persist($livre);
+            $em->flush();
+            // $this->addFlash('success', 'Catégorie ajoutée avec succès');
+            //redirection vers la liste des catégories
+            return $this->redirectToRoute('admin_livres');
+        }
+
+        return $this->render('livres/edit.html.twig', [
+            'f' => $form,
+
         ]);
     }
 }
