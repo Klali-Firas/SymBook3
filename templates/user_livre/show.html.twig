@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des livres
+{% endblock %}
+
+{% block body %}
+	<div class="card">
+		<div class="card-header">
+			<h1 class="card-title">Détail du livre
+				{{ livre.ISBN }}</h1>
+		</div>
+		<div class="card-body">
+			<div class="row">
+				<div class="col-md-4">
+					<img src="{{ livre.image }}" alt="photo du livre" class="img-fluid">
+				</div>
+				<div class="col-md-8">
+					<h4 class="card-subtitle mb-2">Titre:
+						{{ livre.titre|capitalize }}</h4>
+					<h4 class="card-subtitle mb-2">Editeur:
+						{{ livre.editeur }}
+						({{ livre.editedAt|date('d-m-Y') }})</h4>
+					<p class="card-text">{{ livre.resume }}</p>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
