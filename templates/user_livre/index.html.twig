@@ -31,6 +31,7 @@
 						<h5 class="card-title">{{ livre.titre }}</h5>
 						<p class="card-text">{{ livre.editeur }}</p>
 						<a href="{{url('app_user_livre_show',{'id':livre.id})}}" class="btn btn-primary">Voir</a>
+						<a href="{{url('app_article',{'livre':livre.id})}}" class="btn btn-primary">Ajouter au panier</a>
 					</div>
 				</div>
 			</div>

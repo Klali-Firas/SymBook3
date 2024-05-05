@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Panier
+{% endblock %}
+
+{% block body %}
+<h1>Panier</h1>
+
+{% if data|length == 0 %}
+	<p>Votre panier est vide.</p>
+{% else %}
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Titre</th>
+				<th>Prix</th>
+				<th>Quantité</th>
+				<th>Total</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			{% set total = 0 %}
+			{% for item in data %}
+				<tr>
+					<td>{{ item.livre.titre }}</td>
+					<td>{{ item.livre.prix }}
+						TND</td>
+					<td>
+						<div class="input-group">
+							<button class="btn btn-outline-secondary" type="button" onclick="window.location.href = '{{ path('app_article_decrease', {'livre': item.livre.id}) }}'">-</button>
+
+
+							<span class="input-group-text">{{ item.quantite }}</span>
+
+							<button class="btn btn-outline-secondary" type="button" onclick="window.location.href = '{{ path('app_article', {'livre': item.livre.id}) }}'">+</button>
+						</div>
+					</td>
+					<td>{{ item.livre.prix * item.quantite }}
+						TND</td>
+					<td>
+						<a href="{{url('app_article_remove',{'livre':item.livre.id})}}" class="btn btn-danger">Supprimer</a>
+
+					</td>
+				</tr>
+				{% set total = total + item.livre.prix * item.quantite %}
+			{% endfor %}
+			<tr>
+				<td colspan="3">Total</td>
+				<td>{{ total }}
+					TND</td>
+				<td>
+					<a href="{{url('app_panier_confirm')}}" class="btn btn-success">Confirmer</a>
+				</td>
+			</tr>
+		</tbody>
+	</td>
+</tr></tbody></table>{% endif %}{# {{ include('panier/_delete_form.html.twig') }} #}{% endblock %}
