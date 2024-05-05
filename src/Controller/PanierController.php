@@ -18,25 +18,6 @@ use Symfony\Component\Routing\Attribute\Route;
 class PanierController extends AbstractController
 {
 
-    #[Route('/new', name: 'app_panier_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $panier = new Panier();
-        $form = $this->createForm(PanierType::class, $panier);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($panier);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_panier_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('panier/new.html.twig', [
-            'panier' => $panier,
-            'form' => $form,
-        ]);
-    }
 
     #[Route('/', name: 'app_panier_show', methods: ['GET'])]
     public function show(SessionInterface $session, LivresRepository $rep): Response
@@ -59,34 +40,9 @@ class PanierController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_panier_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Panier $panier, EntityManagerInterface $entityManager): Response
-    {
-        $form = $this->createForm(PanierType::class, $panier);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
 
-            return $this->redirectToRoute('app_panier_index', [], Response::HTTP_SEE_OTHER);
-        }
 
-        return $this->render('panier/edit.html.twig', [
-            'panier' => $panier,
-            'form' => $form,
-        ]);
-    }
-
-    #[Route('/{id}', name: 'app_panier_delete', methods: ['POST'])]
-    public function delete(Request $request, Panier $panier, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete' . $panier->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($panier);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('app_panier_index', [], Response::HTTP_SEE_OTHER);
-    }
 
     #[Route('/confirm', name: 'app_panier_confirm')]
     public function confirm(LivresRepository $livrep, SessionInterface $session, EntityManagerInterface $entityManager): Response
@@ -95,6 +51,9 @@ class PanierController extends AbstractController
         $panier->setUser($this->getUser());
 
         $panierFromSession = $session->get('panier', []);
+        if (count($panierFromSession) == 0) {
+            return $this->redirectToRoute('app_panier_show');
+        }
         foreach ($panierFromSession as $id => $quantite) {
             $livre = $livrep->find($id);
             $article = new Article();
@@ -106,8 +65,8 @@ class PanierController extends AbstractController
         $entityManager->persist($panier);
         $entityManager->flush();
 
-        $session->set('panier', []);
+        // $session->set('panier', []);
 
-        return $this->redirectToRoute('app_user_livre');
+        return $this->redirectToRoute('app_order', ['panier' => $panier->getId()]);
     }
 }

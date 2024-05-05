@@ -60,6 +60,9 @@ class CategorieController extends AbstractController
             $em->persist($categorie);
             $em->flush();
             // $this->addFlash('success', 'Catégorie ajoutée avec succès');
+            notyf()
+                ->ripple(true)
+                ->addCreated('Catégorie ajoutée avec succès');
             //redirection vers la liste des catégories
             return $this->redirectToRoute('app_admin_categorie');
         }

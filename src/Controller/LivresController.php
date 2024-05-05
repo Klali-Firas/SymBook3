@@ -52,6 +52,7 @@ class LivresController extends AbstractController
             $em->persist($livre);
             $em->flush();
             // $this->addFlash('success', 'Catégorie ajoutée avec succès');
+            notyf()->ripple(true)->addSuccess('Livre ajouté avec succès');
             //redirection vers la liste des catégories
             return $this->redirectToRoute('admin_livres');
         }
@@ -86,7 +87,7 @@ class LivresController extends AbstractController
             //enregistrement de la catégorie
             $em->persist($livre);
             $em->flush();
-            // $this->addFlash('success', 'Catégorie ajoutée avec succès');
+            notyf()->ripple(true)->addSuccess('Livre modifié avec succès');
             //redirection vers la liste des catégories
             return $this->redirectToRoute('admin_livres');
         }

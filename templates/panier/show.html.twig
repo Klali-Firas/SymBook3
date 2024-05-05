@@ -3,56 +3,155 @@
 {% block title %}Panier
 {% endblock %}
 
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+	<style>
+		/* Custom styles for the shopping cart */
+		.cart-container {
+			padding-top: 50px;
+			padding-bottom: 50px;
+		}
+
+		.cart-title {
+			font-size: 2.5rem;
+			font-weight: bold;
+			color: #333;
+			margin-bottom: 30px;
+		}
+
+		.cart-table {
+			width: 100%;
+			border-collapse: collapse;
+		}
+
+		.cart-table th,
+		.cart-table td {
+			padding: 15px;
+			border-bottom: 1px solid #ddd;
+			text-align: left;
+		}
+
+		.cart-total {
+			font-size: 1.5rem;
+			font-weight: bold;
+			color: #333;
+			margin-top: 20px;
+		}
+
+		.btn {
+			padding: 10px 20px;
+			font-size: 1rem;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			transition: background-color 0.3s ease;
+		}
+
+		.btn-outline {
+			background-color: transparent;
+			border: 2px solid #007bff;
+			color: #007bff;
+		}
+
+		.btn-outline:hover {
+			background-color: #007bff;
+			color: #fff;
+		}
+
+		.btn-danger {
+			background-color: #dc3545;
+			color: #fff;
+		}
+
+		.btn-danger:hover {
+			background-color: #c82333;
+		}
+
+		.btn-success {
+			background-color: #28a745;
+			color: #fff;
+		}
+
+		.btn-success:hover {
+			background-color: #218838;
+		}
+
+		.quantity-controls {
+			display: flex;
+			align-items: center;
+		}
+
+		.quantity-controls button {
+			background-color: transparent;
+			border: none;
+			font-size: 1.2rem;
+			cursor: pointer;
+		}
+
+		.quantity-display {
+			padding: 5px 10px;
+			margin: 0 10px;
+			font-size: 1.2rem;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+		}
+	</style>
+{% endblock %}
+
 {% block body %}
-<h1>Panier</h1>
+	<div class="container cart-container">
+		<h1 class="cart-title">Panier</h1>
 
-{% if data|length == 0 %}
-	<p>Votre panier est vide.</p>
-{% else %}
-	<table class="table">
-		<thead>
-			<tr>
-				<th>Titre</th>
-				<th>Prix</th>
-				<th>Quantité</th>
-				<th>Total</th>
-				<th></th>
-			</tr>
-		</thead>
-		<tbody>
-			{% set total = 0 %}
-			{% for item in data %}
-				<tr>
-					<td>{{ item.livre.titre }}</td>
-					<td>{{ item.livre.prix }}
-						TND</td>
-					<td>
-						<div class="input-group">
-							<button class="btn btn-outline-secondary" type="button" onclick="window.location.href = '{{ path('app_article_decrease', {'livre': item.livre.id}) }}'">-</button>
+		{% if data|length == 0 %}
+			<p>Votre panier est vide.</p>
+		{% else %}
+			<table class="cart-table">
+				<thead>
+					<tr>
+						<th>Titre</th>
+						<th>Prix</th>
+						<th>Quantité</th>
+						<th>Total</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% set total = 0 %}
+					{% for item in data %}
+						<tr>
+							<td>{{ item.livre.titre }}</td>
+							<td>{{ item.livre.prix }}
+								TND</td>
+							<td class="quantity-controls">
+								<button onclick="window.location.href = '{{ path('app_article_decrease', {'livre': item.livre.id}) }}'">
+									<i class="fas fa-minus"></i>
+								</button>
+								<span class="quantity-display">{{ item.quantite }}</span>
+								<button onclick="window.location.href = '{{ path('app_article', {'livre': item.livre.id}) }}'">
+									<i class="fas fa-plus"></i>
+								</button>
+							</td>
+							<td>{{ item.livre.prix * item.quantite }}
+								TND</td>
+							<td>
+								<a href="{{ path('app_article_remove', {'livre': item.livre.id}) }}" class="btn btn-danger">
+									<i class="fas fa-trash-alt"></i>
+									Supprimer</a>
+							</td>
+						</tr>
+						{% set total = total + item.livre.prix * item.quantite %}
+					{% endfor %}
+				</tbody>
+			</table>
 
-
-							<span class="input-group-text">{{ item.quantite }}</span>
-
-							<button class="btn btn-outline-secondary" type="button" onclick="window.location.href = '{{ path('app_article', {'livre': item.livre.id}) }}'">+</button>
-						</div>
-					</td>
-					<td>{{ item.livre.prix * item.quantite }}
-						TND</td>
-					<td>
-						<a href="{{url('app_article_remove',{'livre':item.livre.id})}}" class="btn btn-danger">Supprimer</a>
-
-					</td>
-				</tr>
-				{% set total = total + item.livre.prix * item.quantite %}
-			{% endfor %}
-			<tr>
-				<td colspan="3">Total</td>
-				<td>{{ total }}
-					TND</td>
-				<td>
-					<a href="{{url('app_panier_confirm')}}" class="btn btn-success">Confirmer</a>
-				</td>
-			</tr>
-		</tbody>
-	</td>
-</tr></tbody></table>{% endif %}{# {{ include('panier/_delete_form.html.twig') }} #}{% endblock %}
+			<p class="cart-total">Total:
+				{{ total }}
+				TND</p>
+			<a href="{{ path('app_panier_confirm') }}" class="btn btn-success">
+				<i class="fas fa-check"></i>
+				Confirmer
+			</a>
+		{% endif %}
+	</div>
+{% endblock %}

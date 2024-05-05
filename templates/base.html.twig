@@ -24,12 +24,28 @@
 								<span class="visually-hidden">(current)</span>
 							</a>
 						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="{{url('admin_livres')}}">Nos Livres</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="{{url('app_admin_categorie')}}">Nos Catégories</a>
-						</li>
+						{% if app.user and "ROLE_ADMIN" in app.user.roles %}
+
+
+							<li class="nav-item">
+								<a class="nav-link" href="{{url('admin_livres')}}">Nos Livres</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="{{url('app_admin_categorie')}}">Nos Catégories</a>
+							</li>
+						{% else %}
+							<li class="nav-item">
+								<a class="nav-link" href="{{url('app_user_livre')}}">Nos Livres</a>
+							</li>
+							{% if app.user %}
+
+								<li class="nav-item">
+									<a class="nav-link" href="{{url('app_my_orders')}}">Mes Ordres</a>
+
+								</li>
+							{% endif %}
+						{% endif %}
+
 					</ul>
 					<ul class="navbar-nav me-ml">
 						<li class="nav-item">
@@ -65,4 +81,4 @@
 
 		</div>
 	</body>
-</html>
+</html></body></html>

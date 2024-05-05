@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello OrderController!
+{% endblock %}
+
+{% block body %}
+
+
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 offset-md-3">
+				<div class="card shadow">
+					<div class="card-body">
+						<h1 class="card-title">Order Details</h1>
+						<p class="card-text">User:
+							{{ order.user.email }}</p>
+						<p class="card-text">Order Date:
+							{{ order.orderdate|date('d M, Y. H:i') }}</p>
+
+						<h2>Livres</h2>
+						<table class="table">
+							<thead>
+								<tr>
+									<th>Quantity</th>
+									<th>Title</th>
+									<th>Price</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for article in order.panier.articles %}
+									<tr>
+										<td>{{ article.quantite }}</td>
+										<td>{{ article.livre.titre }}</td>
+										<td>{{ article.livre.prix * article.quantite }}
+											TND</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+
+						<p class="card-text">Prix Total:
+							<span style="color: green;">{{ order.prixtotal }}
+								TND</span>
+						</p>
+						<p class="card-text">Statut:
+							<span class="badge rounded-pill bg-info">{{ order.statut }}</span>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

@@ -15,9 +15,9 @@ class Panier
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'mespaniers', cascade: ['persist'])]
+    // #[ORM\ManyToOne(inversedBy: 'mespaniers', cascade: ['persist'])]
 
-    #[ORM\OneToMany(targetEntity: Article::class, mappedBy: 'panier', cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: Article::class, mappedBy: 'panier', cascade: ['persist', 'remove'])]
     private Collection $articles;
 
     #[ORM\ManyToOne(inversedBy: 'mespaniers')]

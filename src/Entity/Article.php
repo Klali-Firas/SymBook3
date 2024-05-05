@@ -13,7 +13,7 @@ class Article
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'articles', cascade: ['persist'])]
+    #[ORM\ManyToOne(inversedBy: 'articles', cascade: ['persist', 'remove'])]
     private ?panier $panier = null;
 
     #[ORM\ManyToOne]

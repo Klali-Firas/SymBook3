@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello OrderController!
+{% endblock %}
+
+{% block body %}
+	<table class="table align-middle table-hover text-center border rounded-pill shadow-sm">
+
+		<thead class="">
+			<tr>
+				<th>Order</th>
+				<th>Date</th>
+				<th>Total</th>
+				<th>Status</th>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for order in orders %}
+				<tr>
+					<th>#{{ order.id }}</th>
+					<td>{{ order.orderdate|date('d M, Y. H:i') }}</td>
+					<td>{{ order.prixtotal }}
+						TND</td>
+					<td>
+						<span class="badge bg-info">{{ order.statut }}</span>
+					</td>
+					<td>
+						<a href="{{ path('app_order_show', {'order': order.id}) }}" class="btn btn-primary">Voir plus</a>
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+{% endblock %}
