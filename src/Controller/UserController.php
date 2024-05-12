@@ -42,7 +42,7 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setPassword(password_hash($user->getPassword(), PASSWORD_DEFAULT));
             $entityManager->flush();
-
+            notyf()->ripple(true)->addSuccess('Utilisateur modifié avec succès');
             return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -58,6 +58,7 @@ class UserController extends AbstractController
         if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
             $entityManager->remove($user);
             $entityManager->flush();
+            notyf()->ripple(true)->addSuccess('Utilisateur supprimé avec succès');
         }
 
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);

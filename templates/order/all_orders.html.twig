@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello OrderController!
+{% block title %}Bonjour OrderController!
 {% endblock %}
 
 {% block body %}
@@ -27,7 +27,8 @@
 
 					</td>
 					<td>
-						<a href="{{ path('app_order_show', {'order': order.id}) }}" class="btn btn-primary">Voir plus</a>
+						<a href="{{ path('app_order_edit', {'order': order.id}) }}" class="btn btn-primary">Modifier la commande</a>
+
 					</td>
 				</tr>
 			{% endfor %}

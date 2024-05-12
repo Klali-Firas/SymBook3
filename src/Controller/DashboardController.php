@@ -29,13 +29,13 @@ class DashboardController extends AbstractController
             ->getQuery()
             ->getResult();
 
-        $categoryProfit = $artRep->createQueryBuilder('a')
-            ->select('c.libelle as categorie, SUM(l.prix * a.quantite) as totalProfit') // Select 'libelle' from 'c' (Categorie) and calculate the total profit
-            ->join('a.livre', 'l') // Join the 'livre' association
-            ->join('l.categorie', 'c') // Join the 'categorie' association
-            ->groupBy('c.libelle') // Group by the 'libelle' of 'categorie' association
-            ->getQuery()
-            ->getResult();
+        // $categoryProfit = $artRep->createQueryBuilder('a')
+        //     ->select('c.libelle as categorie, SUM(l.prix * a.quantite) as totalProfit') // Select 'libelle' from 'c' (Categorie) and calculate the total profit
+        //     ->join('a.livre', 'l') // Join the 'livre' association
+        //     ->join('l.categorie', 'c') // Join the 'categorie' association
+        //     ->groupBy('c.libelle') // Group by the 'libelle' of 'categorie' association
+        //     ->getQuery()
+        //     ->getResult();
 
         $startDate = new \DateTime('first day of this month');
         $endDate = new \DateTime('last day of this month');
@@ -60,6 +60,12 @@ class DashboardController extends AbstractController
             ->getQuery()
             ->getResult();
 
+        $totalSales = $artRep->createQueryBuilder('a')
+            ->select('SUM(a.quantite) as totalQuantite')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+
 
         return $this->render('dashboard/index.html.twig', [
             'articleStats' => $articleStats,
@@ -67,7 +73,9 @@ class DashboardController extends AbstractController
             'salesPerDay' => $salesPerDay,
             // 'categoryProfit' => $categoryProfit,
             'totalProfit' => $totalProfit,
-            'totalSalesPerDay' => $totalSalesPerDay
+            'totalSalesPerDay' => $totalSalesPerDay,
+            'totalSales' => $totalSales
+
         ]);
     }
 

@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>
-			{% block title %}Welcome!
+			{% block title %}Bienvenue !
 			{% endblock %}
 		</title>
 		<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>"> {% block stylesheets %}{% endblock %}
@@ -21,12 +21,12 @@
 					<ul class="navbar-nav me-auto">
 						<li class="nav-item">
 							<a class="nav-link " href="{{url('app_home')}}">Accueil
-								<span class="visually-hidden">(current)</span>
+								<span class="visually-hidden">(actuel)</span>
 							</a>
 						</li>
 						{% if app.user and "ROLE_ADMIN" in app.user.roles %}
 							<li class="nav-item">
-								<a class="nav-link" href="{{url('app_dashboard')}}">Dashboard</a>
+								<a class="nav-link" href="{{url('app_dashboard')}}">Tableau de bord</a>
 
 							</li>
 
@@ -39,9 +39,15 @@
 
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" href="{{url('app_user_index')}}">Gestion Utilisateurs</a>
+								<a class="nav-link" href="{{url('app_user_index')}}">Gestion des Utilisateurs</a>
 
 							</li>
+
+							<li class="nav-item">
+								<a class="nav-link" href="{{url('app_all_orders')}}">Gestion des Commandes</a>
+
+							</li>
+
 						{% else %}
 							<li class="nav-item">
 								<a class="nav-link" href="{{url('app_user_livre')}}">Nos Livres</a>
@@ -49,7 +55,7 @@
 							{% if app.user %}
 
 								<li class="nav-item">
-									<a class="nav-link" href="{{url('app_my_orders')}}">Mes Ordres</a>
+									<a class="nav-link" href="{{url('app_my_orders')}}">Mes Commandes</a>
 
 								</li>
 							{% endif %}

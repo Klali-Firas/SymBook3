@@ -1,16 +1,60 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello DashboardController!
+{% block title %}Tableau de bord
 {% endblock %}
 
 {% block body %}
-	<div class="shadow mb-3" style="width:min-content" id="chart_div"></div>
-	<div class="shadow mb-3" style="width:min-content" id="pie_chart_div"></div>
+	<div class="container-fluid mt-5">
+		<div class="row">
+			<div class="col-md-8">
+				<div class="card shadow mb-3">
+					<div class="card-body">
+						<div id="chart_div" style="width: 100%; height: 400px;"></div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="card shadow mb-3">
+					<div class="card-body">
+						<div id="pie_chart_div" style="width: 100%; height: 400px;"></div>
+					</div>
+				</div>
+			</div>
+		</div>
 
-	<div class="shadow mb-3" style="width:min-content">{{totalProfit}}</div>
-	<div class="shadow mb-3" style="width:min-content" id="line_chart_div"></div>
-	<div class="shadow mb-3" style="width:min-content" id="sales_chart_div"></div>
-
+		<div class="row">
+			<div class="col-md-4">
+				<div class="card shadow mb-4" style="height: 154px">
+					<div class="card-body">
+						<h5 class="card-title">Profit total :</h5>
+						<h6 class="card-subtitle mb-2 text-muted">{{ totalProfit|number_format(0, '.', ',') }}
+							TND</h6>
+					</div>
+				</div>
+				<div class="card shadow mb-4" style="height: 154px">
+					<div class="card-body">
+						<h5 class="card-title">Ventes totales :</h5>
+						<h6 class="card-subtitle mb-2 text-muted">{{ totalSales }}
+							Livre</h6>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="card shadow mb-3">
+					<div class="card-body">
+						<div id="line_chart_div" style="width: 100%; height: 300px;"></div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="card shadow mb-3">
+					<div class="card-body">
+						<div id="sales_chart_div" style="width: 100%; height: 300px;"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 	<script type="text/javascript">
 		google.charts.load('current', {'packages': ['corechart']});
@@ -18,32 +62,36 @@ google.charts.setOnLoadCallback(drawCharts);
 
 function drawCharts() {
 var articleData = new google.visualization.DataTable();
-articleData.addColumn('string', 'Livre ID');
-articleData.addColumn('number', 'Total Quantite');
+articleData.addColumn('string', 'ID du livre');
+articleData.addColumn('number', 'Quantité totale');
 articleData.addRows([{% for articleStat in articleStats %}[
 '{{ articleStat.titre }}', {{ articleStat.totalQuantite }}
 ],{% endfor %}]);
 
 var articleOptions = {
-title: 'Sales Per Book',
-width: 600,
-height: 400
+legend: 'none',
+title: 'Ventes par livre',
+width: '100%',
+height: '100%'
 };
 
 var articleChart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
 articleChart.draw(articleData, articleOptions);
 
 var categoryData = new google.visualization.DataTable();
-categoryData.addColumn('string', 'Categorie');
-categoryData.addColumn('number', 'Total Quantite');
+categoryData.addColumn('string', 'Catégorie');
+categoryData.addColumn('number', 'Quantité totale');
 categoryData.addRows([{% for categoryStat in categoryStats %}[
 '{{ categoryStat.categorie }}', {{ categoryStat.totalQuantite }}
 ],{% endfor %}]);
 
 var categoryOptions = {
-title: 'Sales Per Category',
-width: 600,
-height: 400
+legend: {
+position: 'bottom'
+},
+title: 'Ventes par catégorie',
+width: '100%',
+height: '100%'
 };
 
 var categoryChart = new google.visualization.PieChart(document.getElementById('pie_chart_div'));
@@ -51,15 +99,18 @@ categoryChart.draw(categoryData, categoryOptions);
 
 var salesPerDayData = new google.visualization.DataTable();
 salesPerDayData.addColumn('string', 'Date');
-salesPerDayData.addColumn('number', 'Total Sales');
+salesPerDayData.addColumn('number', 'Ventes totales');
 salesPerDayData.addRows([{% for sale in salesPerDay %}[
 '{{ sale.date|date("Y-m-d") }}', {{ sale.totalSales }}
 ],{% endfor %}]);
 
 var salesPerDayOptions = {
-title: 'Sales per Day',
-width: 600,
-height: 400,
+legend: 'none',
+
+
+title: 'Ventes par jour',
+width: '100%',
+height: '100%',
 vAxis: {
 viewWindow: {
 min: 0
@@ -72,16 +123,19 @@ salesPerDayChart.draw(salesPerDayData, salesPerDayOptions);
 
 var totalSalesPerDayData = new google.visualization.DataTable();
 totalSalesPerDayData.addColumn('string', 'Date');
-totalSalesPerDayData.addColumn('number', 'Total Sales');
+totalSalesPerDayData.addColumn('number', 'Ventes totales');
 totalSalesPerDayData.addRows([{% for sale in totalSalesPerDay %}[
 '{{ sale.date|date("Y-m-d") }}', {{ sale.totalProfit }}
 ],{% endfor %}]);
 
 var totalSalesPerDayOptions = {
-title: 'Total Profit per Day',
+legend: 'none',
+
+
+title: 'Profit total par jour',
 curveType: 'function',
-width: 600,
-height: 400
+width: '100%',
+height: '100%'
 };
 
 var totalSalesPerDayChart = new google.visualization.LineChart(document.getElementById('sales_chart_div'));

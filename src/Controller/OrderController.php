@@ -122,5 +122,46 @@ class OrderController extends AbstractController
         return $this->redirectToRoute('app_panier_show');
     }
 
+    #[Route('/admin/all-orders', name: 'app_all_orders')]
+    public function allOrders(OrderRepository $rep): Response
+    {
+        $orders = $rep->findAll();
+        return $this->render('order/all_orders.html.twig', [
+            'orders' => $orders,
+        ]);
+    }
+
+    #[Route('admin/order/{order}', name: 'app_order_edit', requirements: ['order' => '\d+'])]
+
+    public function editOrder(Order $order): Response
+    {
+        return $this->render('order/edit_order.html.twig', [
+            'order' => $order,
+        ]);
+    }
+
+    #[Route('admin/order/{order}/update', name: 'app_order_update', requirements: ['order' => '\d+'], methods: ['POST'])]
+    public function updateOrder(Order $order, EntityManagerInterface $em): Response
+    {
+        $order->setStatut($_POST['statut']);
+        $em->flush();
+        notyf()
+            ->ripple(true)
+            ->addSuccess('La commande a été marquée comme ' . $_POST['statut'] . '!');
+
+        return $this->redirectToRoute('app_order_edit', ['order' => $order->getId()]);
+    }
+
+    #[Route('admin/order/{order}/annuler', name: 'app_order_annuler', requirements: ['order' => '\d+'], methods: ['POST'])]
+    public function annulerOrder(Order $order, EntityManagerInterface $em): Response
+    {
+        $order->setStatut("Annulée");
+        $em->flush();
+        notyf()
+            ->ripple(true)
+            ->addError('La commande a été annulée!');
+
+        return $this->redirectToRoute('app_my_orders');
+    }
 
 }

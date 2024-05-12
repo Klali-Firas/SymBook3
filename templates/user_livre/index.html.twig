@@ -1,45 +1,3 @@
-{# {% extends 'base.html.twig' %}
-
-{% block title %}Liste des livres
-{% endblock %}
-
-{% block body %}
-	<div class="container">
-		<h1 class="my-4 text-center">Liste des livres</h1>
-		<form class="mb-4 d-flex justify-content-center" action="/user/livre/search">
-			<div class="input-group w-75">
-
-
-				<input type="text" name="searchTerm" class="form-control" style="width : 60%" placeholder="Search...">
-				<select name="searchBy" class="form-select">
-					<option value="-1" disabled selected>Select category...</option>
-					{% for categorie in categories %}
-						<option value="{{ categorie.id }}">{{ categorie.libelle }}</option>
-					{% endfor %}
-				</select>
-				<button class="btn btn-primary" type="submit">Search</button>
-			</div>
-
-		</form>
-		<div class="row row-cols-1 row-cols-md-3 g-4">
-			{% for livre in livres %}
-				<div class="col">
-					<div class="card h-100 shadow">
-						<img src="{{ livre.image }}" class="card-img-top" alt="{{livre.titre}}">
-						<div class="card-body">
-							<h5 class="card-title">{{ livre.titre }}</h5>
-							<p class="card-text">{{ livre.editeur }}</p>
-						</div>
-						<div class="card-footer">
-							<a href="{{url('app_user_livre_show',{'id':livre.id})}}" class="btn btn-primary">Voir</a>
-							<a href="{{url('app_article',{'livre':livre.id})}}" class="btn btn-primary">Ajouter au panier</a>
-						</div>
-					</div>
-				</div>
-			{% endfor %}
-		</div>
-	</div>
-{% endblock %} #}
 {% extends 'base.html.twig' %}
 
 {% block title %}Liste des livres
@@ -50,14 +8,14 @@
 		<h1 class="my-4 text-center">Liste des livres</h1>
 		<form class="mb-4 d-flex justify-content-center" action="/user/livre/search">
 			<div class="input-group w-75">
-				<input type="text" name="searchTerm" class="form-control" style="width : 60%" placeholder="Search...">
+				<input type="text" name="searchTerm" class="form-control" style="width : 60%" placeholder="Rechercher...">
 				<select name="searchBy" class="form-select">
-					<option value="-1" disabled selected>Select category...</option>
+					<option value="-1" disabled selected>Sélectionner une catégorie...</option>
 					{% for categorie in categories %}
 						<option value="{{ categorie.id }}">{{ categorie.libelle }}</option>
 					{% endfor %}
 				</select>
-				<button class="btn btn-primary" type="submit">Search</button>
+				<button class="btn btn-primary" type="submit">Rechercher</button>
 			</div>
 		</form>
 		<div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-4 mt-4">
@@ -83,7 +41,7 @@
 				{% set currentPath = app.request.get('_route') %}
 				{% set currentParams = app.request.query.all %}
 
-				{# Previous Page Link #}
+				{# Lien vers la page précédente #}
 				{% if currentPage > 1 %}
 					{% set previousPage = currentPage - 1 %}
 					{% set newParams = currentParams|merge({'page': previousPage}) %}
@@ -96,7 +54,7 @@
 					</li>
 				{% endif %}
 
-				{# Page Links #}
+				{# Liens vers les pages #}
 				{% set totalPages = (paginator.count / limit)|round(0, 'ceil') %}
 				{% set startPage = max(1, currentPage - 4) %}
 				{% set endPage = min(totalPages, startPage + 9) %}
@@ -120,7 +78,7 @@
 					</li>
 				{% endif %}
 
-				{# Next Page Link #}
+				{# Lien vers la page suivante #}
 				{% if currentPage < totalPages %}
 					{% set nextPage = currentPage + 1 %}
 					{% set nextParams = currentParams|merge({'page': nextPage}) %}

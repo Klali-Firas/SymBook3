@@ -32,7 +32,7 @@ class CategoriesController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($category);
             $entityManager->flush();
-
+            notyf()->ripple(true)->addSuccess('Catégorie créée avec succès');
             return $this->redirectToRoute('app_categories_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -57,8 +57,9 @@ class CategoriesController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+            notyf()->ripple(true)->addSuccess('Catégorie modifiée avec succès');
 
+            $entityManager->flush();
             return $this->redirectToRoute('app_categories_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -74,6 +75,8 @@ class CategoriesController extends AbstractController
         if ($this->isCsrfTokenValid('delete' . $category->getId(), $request->request->get('_token'))) {
             $entityManager->remove($category);
             $entityManager->flush();
+            notyf()->ripple(true)->addSuccess('Catégorie supprimée avec succès');
+
         }
 
         return $this->redirectToRoute('app_categories_index', [], Response::HTTP_SEE_OTHER);

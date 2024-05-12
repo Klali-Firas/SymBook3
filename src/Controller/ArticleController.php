@@ -2,19 +2,15 @@
 
 namespace App\Controller;
 
-use App\Entity\Article;
+
 use App\Entity\Livres;
-use App\Entity\Panier;
-use App\Entity\User;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\EntityManagerInterface;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
-use function PHPUnit\Framework\isEmpty;
 
 class ArticleController extends AbstractController
 {
@@ -27,13 +23,13 @@ class ArticleController extends AbstractController
     }
 
 
-    #[Route('/article', name: 'app_article')]
-    public function index(): Response
-    {
-        return $this->render('article/index.html.twig', [
-            'controller_name' => 'ArticleController',
-        ]);
-    }
+    // #[Route('/article', name: 'app_article')]
+    // public function index(): Response
+    // {
+    //     return $this->render('article/index.html.twig', [
+    //         'controller_name' => 'ArticleController',
+    //     ]);
+    // }
 
     #[Route('/article/add/{livre}', name: 'app_article')]
     public function add(Livres $livre, SessionInterface $session): Response
@@ -42,11 +38,16 @@ class ArticleController extends AbstractController
 
         if (!empty($panier[$livre->getId()])) {
             $panier[$livre->getId()]++;
+            notyf()
+                ->ripple(true)
+                ->addSuccess('Quantité augmentée dans le panier!');
         } else {
             $panier[$livre->getId()] = 1;
+            notyf()
+                ->ripple(true)
+                ->addSuccess('Article ajouté au panier!');
         }
         $session->set('panier', $panier);
-
 
 
 
@@ -65,6 +66,10 @@ class ArticleController extends AbstractController
         }
         $session->set('panier', $panier);
 
+        notyf()
+            ->ripple(true)
+            ->addSuccess('Quantité diminuée dans le panier!');
+
         return $this->redirectToRoute('app_panier_show');
     }
 
@@ -74,6 +79,9 @@ class ArticleController extends AbstractController
         $panier = $session->get('panier', []);
         if (!empty($panier[$livre->getId()])) {
             unset($panier[$livre->getId()]);
+            notyf()
+                ->ripple(true)
+                ->addSuccess('Article supprimé du panier!');
         }
         $session->set('panier', $panier);
 

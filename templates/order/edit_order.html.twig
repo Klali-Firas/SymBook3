@@ -14,7 +14,7 @@
 						<h1 class="card-title">Détails de la commande</h1>
 						<p class="card-text">Utilisateur:
 							{{ order.user.email }}</p>
-						<p class="card-text">Date de la commande:
+						<p class="card-text">Date de commande:
 							{{ order.orderdate|date('d M, Y. H:i') }}</p>
 
 						<h2>Livres</h2>
@@ -44,37 +44,21 @@
 						</p>
 						<p class="card-text">Statut:
 							<span class="badge rounded-pill {% if order.statut == 'En cours' %}bg-info{% elseif order.statut == 'Expédiée' %}bg-warning{% elseif order.statut == 'Terminé' %}bg-success{% elseif order.statut == 'Annulée' %}bg-danger{% endif %}">{{ order.statut }}</span>
-							{% if (order.statut == 'En cours') %}
-								<form action="{{url('app_order_annuler',{'order':order.id})}}" method="POST" class="w-100 text-end">
 
 
-									<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmationModal">Annuler</button>
-
-									<!-- Confirmation Modal -->
-									<div class="modal fade text-start" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
-										<div class="modal-dialog">
-											<div class="modal-content">
-												<div class="modal-header">
-													<h5 class="modal-title" id="confirmationModalLabel">Confirmation</h5>
-													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-												</div>
-												<div class="modal-body">
-													<p>Êtes-vous sûr de vouloir annuler cette commande ?</p>
-												</div>
-												<div class="modal-footer">
-													<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-													<button type="submit" class="btn btn-primary">Confirmer</button>
-												</div>
-											</div>
-										</div>
-									</div>
-								</form>
-
-							{% endif %}
+							<form action="{{url('app_order_update',{'order':order.id})}}" method="POST">
+								<select class="form-select" name="statut">
+									<option value="En cours">En cours</option>
+									<option value="Annulée">Annulée</option>
+									<option value="Expédiée">Expédiée</option>
+									<option value="Terminé">Terminé</option>
+								</select>
+								<button type="submit" class="btn btn-primary">Enregistrer</button>
+							</form>
 						</p>
-					</p>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>{% endblock %}
+{% endblock %}
