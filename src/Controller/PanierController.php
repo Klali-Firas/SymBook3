@@ -22,10 +22,7 @@ class PanierController extends AbstractController
     #[Route('/', name: 'app_panier_show', methods: ['GET'])]
     public function show(SessionInterface $session, LivresRepository $rep): Response
     {
-        $user = $this->getUser();
-        if ($user == null) {
-            return $this->redirectToRoute('app_login');
-        }
+
         $panier = $session->get('panier', []);
         $data = [];
         foreach ($panier as $id => $quantite) {
@@ -47,6 +44,11 @@ class PanierController extends AbstractController
     #[Route('/confirm', name: 'app_panier_confirm')]
     public function confirm(LivresRepository $livrep, SessionInterface $session, EntityManagerInterface $entityManager): Response
     {
+        $user = $this->getUser();
+        if ($user == null) {
+            return $this->redirectToRoute('app_login');
+        }
+
         $panier = new Panier();
         $panier->setUser($this->getUser());
 

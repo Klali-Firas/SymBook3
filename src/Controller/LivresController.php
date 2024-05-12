@@ -65,7 +65,7 @@ class LivresController extends AbstractController
     #[Route('/admin/livres/delete/{id}', name: 'admin_livres_delete')]
     public function delete(EntityManagerInterface $em, Livres $livre)
     {    //recherche du livre à supprimer
-
+        notyf()->ripple(true)->addSuccess('Livre supprimé avec succès');
         //suppression du livre trouvé
         $em->remove($livre);
         $em->flush();

@@ -1,0 +1,91 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello DashboardController!
+{% endblock %}
+
+{% block body %}
+	<div class="shadow mb-3" style="width:min-content" id="chart_div"></div>
+	<div class="shadow mb-3" style="width:min-content" id="pie_chart_div"></div>
+
+	<div class="shadow mb-3" style="width:min-content">{{totalProfit}}</div>
+	<div class="shadow mb-3" style="width:min-content" id="line_chart_div"></div>
+	<div class="shadow mb-3" style="width:min-content" id="sales_chart_div"></div>
+
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<script type="text/javascript">
+		google.charts.load('current', {'packages': ['corechart']});
+google.charts.setOnLoadCallback(drawCharts);
+
+function drawCharts() {
+var articleData = new google.visualization.DataTable();
+articleData.addColumn('string', 'Livre ID');
+articleData.addColumn('number', 'Total Quantite');
+articleData.addRows([{% for articleStat in articleStats %}[
+'{{ articleStat.titre }}', {{ articleStat.totalQuantite }}
+],{% endfor %}]);
+
+var articleOptions = {
+title: 'Sales Per Book',
+width: 600,
+height: 400
+};
+
+var articleChart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+articleChart.draw(articleData, articleOptions);
+
+var categoryData = new google.visualization.DataTable();
+categoryData.addColumn('string', 'Categorie');
+categoryData.addColumn('number', 'Total Quantite');
+categoryData.addRows([{% for categoryStat in categoryStats %}[
+'{{ categoryStat.categorie }}', {{ categoryStat.totalQuantite }}
+],{% endfor %}]);
+
+var categoryOptions = {
+title: 'Sales Per Category',
+width: 600,
+height: 400
+};
+
+var categoryChart = new google.visualization.PieChart(document.getElementById('pie_chart_div'));
+categoryChart.draw(categoryData, categoryOptions);
+
+var salesPerDayData = new google.visualization.DataTable();
+salesPerDayData.addColumn('string', 'Date');
+salesPerDayData.addColumn('number', 'Total Sales');
+salesPerDayData.addRows([{% for sale in salesPerDay %}[
+'{{ sale.date|date("Y-m-d") }}', {{ sale.totalSales }}
+],{% endfor %}]);
+
+var salesPerDayOptions = {
+title: 'Sales per Day',
+width: 600,
+height: 400,
+vAxis: {
+viewWindow: {
+min: 0
+}
+}
+};
+
+var salesPerDayChart = new google.visualization.LineChart(document.getElementById('line_chart_div'));
+salesPerDayChart.draw(salesPerDayData, salesPerDayOptions);
+
+var totalSalesPerDayData = new google.visualization.DataTable();
+totalSalesPerDayData.addColumn('string', 'Date');
+totalSalesPerDayData.addColumn('number', 'Total Sales');
+totalSalesPerDayData.addRows([{% for sale in totalSalesPerDay %}[
+'{{ sale.date|date("Y-m-d") }}', {{ sale.totalProfit }}
+],{% endfor %}]);
+
+var totalSalesPerDayOptions = {
+title: 'Total Profit per Day',
+curveType: 'function',
+width: 600,
+height: 400
+};
+
+var totalSalesPerDayChart = new google.visualization.LineChart(document.getElementById('sales_chart_div'));
+totalSalesPerDayChart.draw(totalSalesPerDayData, totalSalesPerDayOptions);
+}
+	</script>
+{% endblock %}

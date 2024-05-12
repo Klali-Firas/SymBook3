@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{# {% extends 'base.html.twig' %}
 
 {% block title %}Liste des livres
 {% endblock %}
@@ -6,7 +6,7 @@
 {% block body %}
 	<div class="container">
 		<h1 class="my-4 text-center">Liste des livres</h1>
-		<form class="mb-4 d-flex justify-content-center" action="/user/livre/search" method="post">
+		<form class="mb-4 d-flex justify-content-center" action="/user/livre/search">
 			<div class="input-group w-75">
 
 
@@ -38,5 +38,102 @@
 				</div>
 			{% endfor %}
 		</div>
+	</div>
+{% endblock %} #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des livres
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<h1 class="my-4 text-center">Liste des livres</h1>
+		<form class="mb-4 d-flex justify-content-center" action="/user/livre/search">
+			<div class="input-group w-75">
+				<input type="text" name="searchTerm" class="form-control" style="width : 60%" placeholder="Search...">
+				<select name="searchBy" class="form-select">
+					<option value="-1" disabled selected>Select category...</option>
+					{% for categorie in categories %}
+						<option value="{{ categorie.id }}">{{ categorie.libelle }}</option>
+					{% endfor %}
+				</select>
+				<button class="btn btn-primary" type="submit">Search</button>
+			</div>
+		</form>
+		<div class="row row-cols-1 row-cols-md-3 g-4">
+			{% for livre in paginator %}
+				<div class="col">
+					<div class="card h-100 shadow">
+						<img src="{{ livre.image }}" class="card-img-top" alt="{{livre.titre}}">
+						<div class="card-body">
+							<h5 class="card-title">{{ livre.titre }}</h5>
+							<p class="card-text">{{ livre.editeur }}</p>
+						</div>
+						<div class="card-footer">
+							<a href="{{url('app_user_livre_show',{'id':livre.id})}}" class="btn btn-primary">Voir</a>
+							<a href="{{url('app_article',{'livre':livre.id})}}" class="btn btn-primary">Ajouter au panier</a>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+		<div class="w-100 d-flex justify-content-center mt-3">
+			<ul class="pagination pagination-sm">
+				{% set currentPath = app.request.get('_route') %}
+				{% set currentParams = app.request.query.all %}
+
+				{# Previous Page Link #}
+				{% if currentPage > 1 %}
+					{% set previousPage = currentPage - 1 %}
+					{% set newParams = currentParams|merge({'page': previousPage}) %}
+					<li class="page-item">
+						<a class="page-link" href="{{ path(currentPath, newParams) }}">«</a>
+					</li>
+				{% else %}
+					<li class="page-item disabled">
+						<a class="page-link" href="#">«</a>
+					</li>
+				{% endif %}
+
+				{# Page Links #}
+				{% set totalPages = (paginator.count / limit)|round(0, 'ceil') %}
+				{% set startPage = max(1, currentPage - 4) %}
+				{% set endPage = min(totalPages, startPage + 9) %}
+
+				{% if startPage > 1 %}
+					<li class="page-item">
+						<a class="page-link" href="{{ path(currentPath, currentParams|merge({'page': startPage - 1})) }}">...</a>
+					</li>
+				{% endif %}
+
+				{% for i in startPage..endPage %}
+					{% set pageParams = currentParams|merge({'page': i}) %}
+					<li class="page-item{% if i == currentPage %} active{% endif %}">
+						<a class="page-link" href="{{ path(currentPath, pageParams) }}">{{ i }}</a>
+					</li>
+				{% endfor %}
+
+				{% if endPage < totalPages %}
+					<li class="page-item">
+						<a class="page-link" href="{{ path(currentPath, currentParams|merge({'page': endPage + 1})) }}">...</a>
+					</li>
+				{% endif %}
+
+				{# Next Page Link #}
+				{% if currentPage < totalPages %}
+					{% set nextPage = currentPage + 1 %}
+					{% set nextParams = currentParams|merge({'page': nextPage}) %}
+					<li class="page-item">
+						<a class="page-link" href="{{ path(currentPath, nextParams) }}">»</a>
+					</li>
+				{% else %}
+					<li class="page-item disabled">
+						<a class="page-link" href="#">»</a>
+					</li>
+				{% endif %}
+			</ul>
+		</div>
+
+
 	</div>
 {% endblock %}

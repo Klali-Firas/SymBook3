@@ -14,7 +14,7 @@ class Article
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'articles', cascade: ['persist', 'remove'])]
-    private ?panier $panier = null;
+    private ?Panier $panier = null;
 
     #[ORM\ManyToOne]
     private ?Livres $livre = null;
@@ -27,12 +27,12 @@ class Article
         return $this->id;
     }
 
-    public function getPanier(): ?panier
+    public function getPanier(): ?Panier
     {
         return $this->panier;
     }
 
-    public function setPanier(?panier $panier): static
+    public function setPanier(?Panier $panier): static
     {
         $this->panier = $panier;
 
