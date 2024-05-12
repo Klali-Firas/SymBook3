@@ -46,7 +46,7 @@
 {% endblock %}
 
 {% block body %}
-	<div class="container">
+	<div class="">
 		<h1 class="my-4 text-center">Liste des livres</h1>
 		<form class="mb-4 d-flex justify-content-center" action="/user/livre/search">
 			<div class="input-group w-75">
@@ -60,7 +60,7 @@
 				<button class="btn btn-primary" type="submit">Search</button>
 			</div>
 		</form>
-		<div class="row row-cols-1 row-cols-md-3 g-4">
+		<div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-4 mt-4">
 			{% for livre in paginator %}
 				<div class="col">
 					<div class="card h-100 shadow">
@@ -70,14 +70,15 @@
 							<p class="card-text">{{ livre.editeur }}</p>
 						</div>
 						<div class="card-footer">
-							<a href="{{url('app_user_livre_show',{'id':livre.id})}}" class="btn btn-primary">Voir</a>
-							<a href="{{url('app_article',{'livre':livre.id})}}" class="btn btn-primary">Ajouter au panier</a>
+							<a href="{{url('app_user_livre_show',{'id':livre.id})}}" class="btn btn-sm btn-primary">Voir</a>
+							<a href="{{url('app_article',{'livre':livre.id})}}" class="btn btn-sm btn-primary">Ajouter au panier</a>
+
 						</div>
 					</div>
 				</div>
 			{% endfor %}
 		</div>
-		<div class="w-100 d-flex justify-content-center mt-3">
+		<div class="w-100 d-flex justify-content-center mt-5">
 			<ul class="pagination pagination-sm">
 				{% set currentPath = app.request.get('_route') %}
 				{% set currentParams = app.request.query.all %}

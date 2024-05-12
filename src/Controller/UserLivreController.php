@@ -18,7 +18,7 @@ class UserLivreController extends AbstractController
     {
 
         $currentPage = $request->query->getInt('page', 1);
-        $limit = 6; // Number of items per page
+        $limit = 5; // Number of items per page
         $paginator = $paginationRep->findPaginated($currentPage, $limit);
         $categories = $catrep->findAll();
 
@@ -45,7 +45,7 @@ class UserLivreController extends AbstractController
         $searchTerm = $request->query->get('searchTerm');
         $searchBy = $request->query->get('searchBy');
         $currentPage = $request->query->getInt('page', 1);
-        $limit = 6; // Number of items per page
+        $limit = 5; // Number of items per page
         $paginator = $paginationRep->filterPaginated($currentPage, $limit, $searchTerm, $searchBy);
         // $cat = "1=1";
         // if ($searchBy) {
